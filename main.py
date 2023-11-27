@@ -5,23 +5,23 @@ import math
 from selenium import webdriver
 import time
 
-path = r"C:\Python"
-projectname = "dataset"
-folders = \
-["1",
- "2",
- "3",
- "4",
- "5"]
-
 def Folder():
-    fullPath = os.path.join(path, projectname)
+    path_to_save_reviews = input("Enter the path to save reviews: ")
+    projectname = "dataset"
+    folders = \
+    ["1",
+     "2",
+     "3",
+     "4",
+     "5"]
+    fullPath = os.path.join(path_to_save_reviews, projectname)
     if not os.path.exists(fullPath):
         os.mkdir(fullPath)
     for f in folders:
         folder = os.path.join(fullPath, f)
         if not os.path.exists(folder):
             os.mkdir(folder)
+    return fullPath
 
 def parse_reviews(rating, soup):
     reviews = soup.findAll("div", class_= f"lenta-card")
@@ -36,10 +36,11 @@ def parse_reviews(rating, soup):
             review_texts.append(name_book + "\n" + review_text)
     return review_texts
 
-def write_reviews(reviews, rating, count):
+def write_reviews(reviews, rating, fullPath):
+    count = 0
     for review_text in reviews:
         if count < 1000:
-            with open(fr"C:\Python\dataset\{rating}\{count:04}.txt", "w", encoding="utf-8") as file:
+            with open(fr"{fullPath}\{rating}\{count:04}.txt", "w", encoding="utf-8") as file:
                 file.write(review_text)
             count += 1
         else:
@@ -48,9 +49,9 @@ def write_reviews(reviews, rating, count):
 
 def main():
     list = [5,4,3,2,1]
+    fullPath = Folder()
     for k in list:
-        count = 0
-        for i in range(1, 2):
+        for i in range(1, 3):
             url = f"https://www.livelib.ru/reviews/~{i}#reviews"
             driver = webdriver.Chrome()
             driver.get(url)
@@ -60,10 +61,8 @@ def main():
             driver.close()
             soup = BeautifulSoup(src, "lxml")
             review = parse_reviews(k, soup)
-            count = write_reviews(review, k, count)
-        print(f"{k}: {count}")
+            write_reviews(review, k, fullPath)
     return 0
 
 if __name__ == '__main__':
-    Folder()
     main()
