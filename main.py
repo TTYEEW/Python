@@ -5,8 +5,7 @@ import math
 from selenium import webdriver
 import time
 
-def Folder():
-    path_to_save_reviews = input("Enter the path to save reviews: ")
+def Folder(path_to_save_reviews):
     projectname = "dataset"
     folders = \
     ["1",
@@ -49,7 +48,7 @@ def write_reviews(reviews, rating, fullPath):
 
 def main():
     list = [5,4,3,2,1]
-    fullPath = Folder()
+    fullPath = Folder(path_to_save_reviews)
     for k in list:
         for i in range(1, 3):
             url = f"https://www.livelib.ru/reviews/~{i}#reviews"
@@ -65,4 +64,5 @@ def main():
     return 0
 
 if __name__ == '__main__':
+    path_to_save_reviews = input("Enter the path to save reviews: ")
     main()
